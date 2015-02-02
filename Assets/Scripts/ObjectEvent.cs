@@ -8,7 +8,10 @@ public class ObjectEvent : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+
+        if (this.gameObject.name != "Mesa")
+            renderer.material.color = Color.blue;
+
 	}
 	
 	// Update is called once per frame
@@ -25,7 +28,7 @@ public class ObjectEvent : MonoBehaviour {
     {
         if (collision.gameObject.name == "babyhand")
         {
-            Debug.Log("COLISAO CUBO!");
+            Debug.Log("COLISAO: " + this.gameObject.name + " !");
             Mestre = collision.gameObject;
             Colisao = true;
         }
