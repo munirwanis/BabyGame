@@ -3,7 +3,7 @@ using System.Collections;
 
 public class ObjectEvent : MonoBehaviour {
 
-    public bool Colisao = false;
+    public bool Grab = false;
     public GameObject Mestre;
 
 	// Use this for initialization
@@ -17,7 +17,7 @@ public class ObjectEvent : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if (Colisao)
+        if (Grab)
         {
             this.transform.position = Mestre.transform.position;
         }
@@ -28,9 +28,12 @@ public class ObjectEvent : MonoBehaviour {
     {
         if (collision.gameObject.name == "babyhand")
         {
-            Debug.Log("COLISAO: " + this.gameObject.name + " !");
-            Mestre = collision.gameObject;
-            Colisao = true;
+            if (collision.gameObject.GetComponent<MouseEvents>().ObjectOnHand == false)
+            {
+                Debug.Log("COLISAO: " + this.gameObject.name + " !");
+                Mestre = collision.gameObject;
+                Grab = true;
+            }
         }
 
     }
