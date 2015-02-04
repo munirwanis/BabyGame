@@ -2,7 +2,26 @@ fileFormatVersion: 2
 guid: 97a5572fca29a194992e963df5eaa052
 ModelImporter:
   serializedVersion: 16
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    100000: floor
+    100002: //RootNode
+    100004: wall_L
+    100006: wall_R
+    400000: floor
+    400002: //RootNode
+    400004: wall_L
+    400006: wall_R
+    2300000: floor
+    2300002: wall_L
+    2300004: wall_R
+    3300000: floor
+    3300002: wall_L
+    3300004: wall_R
+    4300000: wall_L
+    4300002: wall_R
+    4300004: floor
+    7400000: Default Take
+    9500000: //RootNode
   materials:
     importMaterials: 1
     materialName: 0
