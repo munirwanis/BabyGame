@@ -3,32 +3,53 @@ using System.Collections;
 
 public class MouseEvents : MonoBehaviour {
 
-    public float DefaultHandZ = 15.13532f;
-    public float Depth = 15f;
-    public bool ObjectOnHand = false;
+    public float Depth = 10f;
 
 	// Use this for initialization
 	void Start () {
 
+        Vector2 MousePos = Input.mousePosition;
+        Vector3 HandPosition = Camera.main.ScreenToWorldPoint(new Vector3(MousePos.x, MousePos.y, Depth));
+
+        HandPosition.z = Depth;
+
+        transform.position = HandPosition;
+
+        Screen.showCursor = true;
+
+        Debug.Log("POSZ: " + this.transform.position.z);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        
-        if (Input.GetMouseButton(0))
+
+        float posz = this.transform.position.z;
+
+        Vector2 MousePos = Input.mousePosition;
+
+        if (Input.GetMouseButtonUp(0))
         {
-            Depth++;
+            if (posz != Depth)
+                posz = Depth;
+            else
+                posz = 20.13531f;
+
+            Debug.Log("POSZ: " + posz);
         }
-        if (Input.GetMouseButton(1))
-        {
-            Depth--;
-        }
 
-        Ray HandRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Vector3 HandPosition = Camera.main.ScreenToWorldPoint(new Vector3(MousePos.x, MousePos.y, Depth));
 
-        Vector3 HandPosition = HandRay.GetPoint(Depth);
+        HandPosition.z = posz;
 
-        transform.position = HandPosition;
+        transform.position = HandPosition;  
 	}
 
+    void OnCollisionEnter(Collision collision){
+
+	}
+
+    void OnCollisionExit(Collision collision)
+    {
+
+    }
 }
