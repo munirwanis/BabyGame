@@ -45,6 +45,10 @@ public class MouseEvents : MonoBehaviour {
 
     void OnCollisionEnter(Collision collision)
     {
+        if (collision.gameObject.name == "Cubo" || collision.gameObject.name == "Triangulo" || collision.gameObject.name == "Cilindro")
+            if (collision.gameObject.GetComponent<ObjectEvent>().OnTable == true && ObjectOnHand == false)
+                Collision = true;
+
         if (collision.gameObject.name != "Cubo" && collision.gameObject.name != "Triangulo" && collision.gameObject.name != "Cilindro")
             Collision = true;
     }
