@@ -3,8 +3,9 @@ using System.Collections;
 
 public class ObjectEvent : MonoBehaviour {
 
-    public float InitialPosZ;
-    public float InitialPosX;
+    public float InitialLocalPosX;
+    public float InitialLocalPosZ;
+    public float FinalLocalPosY = 0.013f;
     public bool OnTable = false;
     public bool Grab = false;
     public GameObject Mestre;
@@ -15,12 +16,8 @@ public class ObjectEvent : MonoBehaviour {
         if (this.gameObject.name != "Mesa")
             renderer.material.color = Color.blue;
 
-        InitialPosX = transform.localPosition.x;
-        InitialPosZ = transform.localPosition.z;
-
-        Debug.Log(gameObject.name + " - POSX: " + InitialPosX + "    POZ: " + InitialPosZ);
-        //transform.position = new Vector3(InitialPosX, 0.011f, InitialPosZ);
-
+        InitialLocalPosX = transform.localPosition.x;
+        InitialLocalPosZ = transform.localPosition.z;
 	}
 	
 	// Update is called once per frame
@@ -30,11 +27,6 @@ public class ObjectEvent : MonoBehaviour {
         {
             Mestre.GetComponent<MouseEvents>().ObjectOnHand = false;
             Grab = false;
-        }
-
-        if (Input.GetKeyUp(KeyCode.Q))
-        {
-            Debug.Log(gameObject.name + " - POSX: " + transform.position.x + " POSY: " + transform.position.y + "    POZ: " + transform.position.z);
         }
 
         if (Grab)
@@ -48,12 +40,14 @@ public class ObjectEvent : MonoBehaviour {
     {
         if (collision.gameObject.name == ("Colisor " + gameObject.name))
         {
-            Debug.Log("COLISAO: " + gameObject.name + " NA MESA DO " + collision.gameObject.name);
-            transform.position = new Vector3(transform.position.x, 0.011f, transform.position.z);
+            transform.localPosition = new Vector3(InitialLocalPosX, FinalLocalPosY, InitialLocalPosZ);
+            renderer.material.color = Color.green;
             OnTable = true;
             Grab = false;
             Mestre.GetComponent<MouseEvents>().ObjectOnHand = false;
         }
+        else if (collision.gameObject.name.Contains("Colisor"))
+            renderer.material.color = Color.red;
        
         if (collision.gameObject.name == "babyhand" && OnTable == false)
         {
@@ -64,5 +58,11 @@ public class ObjectEvent : MonoBehaviour {
                 Grab = true;
             }
         }
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (renderer.material.color == Color.red)
+            renderer.material.color = Color.blue;
     }
 }
