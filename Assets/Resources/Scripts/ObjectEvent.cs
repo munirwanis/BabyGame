@@ -6,6 +6,7 @@ public class ObjectEvent : MonoBehaviour {
     public float InitialLocalPosX;
     public float InitialLocalPosZ;
     public float FinalLocalPosY = 0.013f;
+    public bool Randomize = true;
     public bool OnTable = false;
     public bool Grab = false;
     public GameObject Mestre;
@@ -13,21 +14,17 @@ public class ObjectEvent : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-        Vector3 MyPosition = transform.position;
-
         if (this.gameObject.name != "Mesa")
             renderer.material.color = Color.blue;
 
         InitialLocalPosX = transform.localPosition.x;
         InitialLocalPosZ = transform.localPosition.z;
 
-        transform.position = transform.position * 4;
-
-        RandomPosition(MyPosition);
+        RandomPosition();
 	}
-	
+
 	// Update is called once per frame
-	void Update () {
+	void Update () {   
 
         if (Input.GetKeyUp(KeyCode.Space) && Mestre != null)
         {
@@ -49,6 +46,7 @@ public class ObjectEvent : MonoBehaviour {
             Grab = false;
             Mestre.GetComponent<MouseEvents>().ObjectOnHand = false;
         }
+
         else if (collision.gameObject.name.Contains("Colisor"))
             renderer.material.color = Color.red;
        
@@ -59,57 +57,30 @@ public class ObjectEvent : MonoBehaviour {
                 Mestre = collision.gameObject;
                 Mestre.GetComponent<MouseEvents>().ObjectOnHand = true;
                 Grab = true;
+                Randomize = false;
             }
         }
+    }
+
+    void OnCollisionStay(Collision collision)
+    {
+        if (Randomize)
+            RandomPosition();
     }
 
     void OnCollisionExit(Collision collision)
     {
         if (renderer.material.color == Color.red)
             renderer.material.color = Color.blue;
+
     }
 
-    void RandomPosition(Vector3 MyPosition)
+    void RandomPosition()
     {
-        float[] Positions = {-3.644695f, -0.3142252f, 3.494558f};
-        bool Ocupado = true;
-        int AntiLoop = 0;
+        Vector3[] Positions = { new Vector3(-3.644695f, 3.2f, 21.3f), new Vector3(-0.3142252f, 3.2f, 21.1f), new Vector3(3.5f, 3.1f, 21f) };
         int Rnd;
-        Ray RayCast;
-        RaycastHit Hit;
+        Rnd = Random.Range(0, 3);
 
-        while (Ocupado && AntiLoop < 20)
-        {
-            Rnd = Random.Range(0, 3);
-            RayCast = new Ray(Vector3.zero, new Vector3(Positions[Rnd], MyPosition.y, MyPosition.z));
-
-            if (Rnd == 0)
-                Debug.DrawRay(Vector3.zero, new Vector3(Positions[Rnd], MyPosition.y, MyPosition.z), Color.red, 10f);
-            else if (Rnd == 1)
-                Debug.DrawRay(Vector3.zero, new Vector3(Positions[Rnd], MyPosition.y, MyPosition.z), Color.green, 10f);
-            else
-                Debug.DrawRay(Vector3.zero, new Vector3(Positions[Rnd], MyPosition.y, MyPosition.z), Color.blue, 10f);
-
-            if (Physics.Raycast(RayCast, out Hit))
-            {
-                if (Hit.collider == null)
-                {
-                    Debug.Log(Hit.collider.gameObject.name);
-                    transform.position = new Vector3(Positions[Rnd], MyPosition.y, MyPosition.z);
-                    Ocupado = false;
-                }
-                else
-                {
-                    AntiLoop++;
-                    if (Hit.collider.gameObject.name == "Cubo")
-                    {
-                        Debug.Log("COLLIDER POS: " + Hit.transform.position);
-                        Debug.Log("POSICAO ATUAL: " + transform.position);
-                        Debug.Log("POSICAO ANTIGA: " + MyPosition);
-                    }
-                }
-            }
-                
-        }
+        rigidbody.MovePosition(Positions[Rnd]);
     }
 }
